@@ -10,7 +10,22 @@ function getVideo() {
     .then((localMediaStream) => {
       video.srcObject = localMediaStream;
       video.play();
+    })
+    .catch((err) => {
+      console.log('webcam error', err);
     });
 }
 
+function paintToCanvas() {
+  const width = video.videoWidth;
+  const height = video.videoHeight;
+
+  [canvas.width, canvas.height] = [width, height];
+
+  return setInterval(() => {
+    ctx.drawImage(video, 0, 0, width, height);
+  }, 16);
+}
+
 getVideo();
+// paintToCanvas();
