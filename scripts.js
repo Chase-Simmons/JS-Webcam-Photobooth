@@ -27,5 +27,22 @@ function paintToCanvas() {
   }, 16);
 }
 
+function takePhoto() {}
+
+function wait() {
+  console.log(video.srcObject);
+  if (video.srcObject === null) {
+    setTimeout(() => {
+      console.log('waiting');
+      wait();
+    }, 500);
+  } else {
+    setTimeout(() => {
+      console.log('printing');
+      paintToCanvas();
+    }, 500);
+  }
+}
+
 getVideo();
-// paintToCanvas();
+wait();
