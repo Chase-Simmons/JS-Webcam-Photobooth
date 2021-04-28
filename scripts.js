@@ -17,13 +17,18 @@ function getVideo() {
 }
 
 function paintToCanvas() {
-  const width = video.videoWidth;
-  const height = video.videoHeight;
-
+  const [width, height] = [video.videoWidth, video.videoHeight];
   [canvas.width, canvas.height] = [width, height];
 
   return setInterval(() => {
     ctx.drawImage(video, 0, 0, width, height);
+
+    let pixels = ctx.getImageData(0, 0, width, height);
+
+    // pixels = redEffect(pixels);
+    pixels = rgbSplit(pixels);
+
+    ctx.putImageData(pixels, 0, 0);
   }, 16);
 }
 
@@ -35,10 +40,27 @@ function takePhoto() {
   const link = document.createElement('a');
   link.href = data;
   link.setAttribute('download', 'photobooth');
-  link.textContent = 'Download Image';
+  link.innerHTML = `<img src="${data}" alt="Booth-Item" />`;
   strip.insertBefore(link, strip.firstChild);
 }
 
 video.addEventListener('canplay', paintToCanvas);
 
+function redEffect(pixels) {
+  for (let i = 0; i < pixels.data.length; i += 4) {
+    pixels.data[i + 0] = pixels.data[i + 0] + 100; //red
+    pixels.data[i + 1] = pixels.data[i + 1] - 50; //green
+    pixels.data[i + 2] = pixels.data[i + 2] * 0.5; // blue
+  }
+  return pixels;
+}
+
+function rgbSplit(pixels) {
+  for (let i = 0; i < pixels.data.length; i += 4) {
+    pixels.data[i - 150] = pixels.data[i + 0]; //red
+    pixels.data[i + 100] = pixels.data[i + 1]; //green
+    pixels.data[i - 150] = pixels.data[i + 2]; // blue
+  }
+  return pixels;
+}
 getVideo();
