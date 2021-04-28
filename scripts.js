@@ -27,22 +27,11 @@ function paintToCanvas() {
   }, 16);
 }
 
-function takePhoto() {}
-
-function wait() {
-  console.log(video.srcObject);
-  if (video.srcObject === null) {
-    setTimeout(() => {
-      console.log('waiting');
-      wait();
-    }, 500);
-  } else {
-    setTimeout(() => {
-      console.log('printing');
-      paintToCanvas();
-    }, 500);
-  }
+function takePhoto() {
+  snap.currentTime = 0;
+  snap.play();
 }
 
+video.addEventListener('canplay', paintToCanvas);
+
 getVideo();
-wait();
